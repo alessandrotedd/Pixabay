@@ -20,8 +20,8 @@ data class Image(
     val webformatWidth: Int,
     val webformatHeight: Int,
     val largeImageURL: String,
-    val fullHDURL: String,
-    val imageURL: String,
+    val fullHDURL: String?,
+    val imageURL: String?,
     val imageWidth: Int,
     val imageHeight: Int,
     val imageSize: Int,
@@ -29,6 +29,7 @@ data class Image(
     val downloads: Int,
     val likes: Int,
     val comments: Int,
+    val vectorURL: String?,
     @Json(name = "user_id") val userId: Int,
     val user: String,
     val userImageURL: String
