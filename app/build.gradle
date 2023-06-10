@@ -15,7 +15,8 @@ android {
         targetSdk 33
         versionCode 2
         versionName "1.1"
-        buildConfigField "String", "ENDPOINT", "\"https://pokeapi.co/api/v2/\"" // TODO example
+        buildConfigField "String", "ENDPOINT", '"https://pixabay.com/api/"'
+        buildConfigField "String", "PIXABAY_API_KEY", "\"${getPixabayApiKey()}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -46,6 +47,14 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+}
+
+def getPixabayApiKey() {
+    return rootProject.file('local.properties').with {
+        Properties properties = new Properties()
+        properties.load(it.newDataInputStream())
+        return properties.getProperty('pixabayApiKey')
     }
 }
 
@@ -107,7 +116,4 @@ dependencies {
     // Coroutines
     def coroutines_version = '1.5.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-
-    // Accompanist
-    implementation "com.google.accompanist:accompanist-permissions:0.25.0"
 }
