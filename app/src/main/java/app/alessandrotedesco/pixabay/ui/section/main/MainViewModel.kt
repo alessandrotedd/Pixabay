@@ -14,10 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val api: RemoteDataSourceRetrofit,
+    private val api: RemoteDataSourceRetrofit
 ): ViewModel() {
     val images = MutableLiveData<ImageResponse?>()
-    var query: MutableState<String> = mutableStateOf("")
+    var query: MutableState<String> = mutableStateOf("fruits")
 
     fun searchImages(query: String) = viewModelScope.launch {
         val response = api.searchImages(query)
