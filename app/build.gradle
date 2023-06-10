@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'app.alessandrotedesco.template'
+    namespace 'app.alessandrotedesco.pixabay'
     compileSdk 33
 
     defaultConfig {
-        applicationId "app.alessandrotedesco.template"
+        applicationId "app.alessandrotedesco.pixabay"
         minSdk 24
         targetSdk 33
         versionCode 2
