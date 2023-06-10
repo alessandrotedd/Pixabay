@@ -3,7 +3,7 @@ package app.alessandrotedesco.pixabay.apiservice
 import app.alessandrotedesco.pixabay.BuildConfig
 import app.alessandrotedesco.pixabay.apiservice.adapter.MyEnumAdapter
 import app.alessandrotedesco.pixabay.apiservice.interceptors.HeaderInterceptor
-import app.alessandrotedesco.pixabay.apiservice.model.Pokemon
+import app.alessandrotedesco.pixabay.apiservice.model.ImageResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -45,7 +45,7 @@ class RemoteDataSourceRetrofit: BaseRepo() {
         client = retrofit.create(Service::class.java)
     }
 
-    suspend fun getPokemon(name: String): Resource<Pokemon> = safeApiCall { // TODO example
-        client.getPokemon(name)
+    suspend fun searchImages(name: String): Resource<ImageResponse> = safeApiCall {
+        client.searchImages(name)
     }
 }

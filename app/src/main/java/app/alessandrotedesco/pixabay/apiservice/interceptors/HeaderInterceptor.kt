@@ -8,7 +8,7 @@ class HeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request: Request = chain.request()
             .newBuilder()
-            .addHeader("Accept", "application/json") // TODO example
+            .addHeader("Accept", "application/json")
             .build()
         return chain.proceed(request)
     }
