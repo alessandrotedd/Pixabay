@@ -2,10 +2,12 @@ package app.alessandrotedesco.pixabay.apiservice.interceptors
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import okhttp3.Interceptor
+import okhttp3.Response
 
 class OfflineCacheInterceptor(private val context: Context): Interceptor {
-    override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
+    override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
 
         if (!isNetworkAvailable(context)) {
@@ -20,7 +22,8 @@ class OfflineCacheInterceptor(private val context: Context): Interceptor {
 
     private fun isNetworkAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
+        val network = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }
