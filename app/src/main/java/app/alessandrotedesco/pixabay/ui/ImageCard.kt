@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.alessandrotedesco.pixabay.apiservice.model.Image
+import app.alessandrotedesco.pixabay.utils.getImageLoader
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
@@ -66,6 +67,6 @@ fun ImageCardPreview() {
             tags = "tags",
             previewURL = "https://via.placeholder.com/150"
         ),
-        imageLoader = ImageLoader.Builder(LocalContext.current).build()
+        imageLoader = getImageLoader(LocalContext.current)
     )
 }

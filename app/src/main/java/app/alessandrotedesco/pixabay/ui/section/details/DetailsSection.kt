@@ -66,8 +66,6 @@ fun DetailsSectionUI(image: Image) {
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun MainSectionPreview() {
