@@ -54,27 +54,7 @@ fun ImageCard(image: Image, imageLoader: ImageLoader, onClick: () -> Unit = {}) 
                     modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-                Row(
-                    Modifier
-                        .horizontalScroll(rememberScrollState())
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    image.tags.split(",").forEach {
-                        Box(Modifier
-                            .shadow(4.dp)
-                            .clickable { }
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.primary)
-                        ) {
-                            Text(
-                                text = it,
-                                Modifier.padding(8.dp),
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-                }
+                TagsRow(image.tags.split(","))
             }
         }
     }
