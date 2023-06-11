@@ -10,7 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import app.alessandrotedesco.pixabay.ui.navigation.Main
+import app.alessandrotedesco.pixabay.ui.navigation.MainNav
+import app.alessandrotedesco.pixabay.ui.section.details.DetailsSection
 import app.alessandrotedesco.pixabay.ui.section.main.MainSection
 import app.alessandrotedesco.pixabay.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,9 +27,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavHost(navController, startDestination = Main.Example.route) {
-                        composable(Main.Example.route) {
+                    NavHost(navController, startDestination = MainNav.Search.route) {
+                        composable(MainNav.Search.route) {
                             MainSection(navController)
+                        }
+                        composable(MainNav.Detail.route, MainNav.Detail.arguments) {
+                            DetailsSection(it.arguments?.getString("imageId")!!)
                         }
                     }
                 }
