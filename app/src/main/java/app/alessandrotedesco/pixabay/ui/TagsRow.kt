@@ -20,10 +20,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TagsRow(tags: List<String>) {
+    if (tags.isEmpty()) return
+
     Row(
         Modifier
             .horizontalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         tags.forEach {

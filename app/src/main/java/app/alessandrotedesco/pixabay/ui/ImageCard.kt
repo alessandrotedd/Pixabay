@@ -40,6 +40,10 @@ fun ImageCard(image: Image, imageLoader: ImageLoader, onClick: () -> Unit = {}) 
         imageLoader = imageLoader
     )
 
+    val tags = image.tags.split(",").let {
+        if (it.size == 1 && it.first() == "") emptyList() else it
+    }
+
     Card(Modifier.clickable { onClick.invoke() }) {
         Row(Modifier.fillMaxWidth()) {
             androidx.compose.foundation.Image(
@@ -54,7 +58,7 @@ fun ImageCard(image: Image, imageLoader: ImageLoader, onClick: () -> Unit = {}) 
                     modifier = Modifier.padding(16.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-                TagsRow(image.tags.split(","))
+                TagsRow(tags)
             }
         }
     }
