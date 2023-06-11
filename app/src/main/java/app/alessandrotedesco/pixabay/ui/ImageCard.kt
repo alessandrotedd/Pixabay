@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import app.alessandrotedesco.pixabay.apiservice.model.Image
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 
 @Composable
@@ -34,6 +35,7 @@ fun ImageCard(image: Image, imageLoader: ImageLoader, onClick: () -> Unit = {}) 
         ImageRequest.Builder(LocalContext.current)
             .data(data = image.webformatURL)
             .crossfade(true)
+            .networkCachePolicy(CachePolicy.READ_ONLY)
             .build(),
         imageLoader = imageLoader
     )

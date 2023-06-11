@@ -3,6 +3,7 @@ package app.alessandrotedesco.pixabay.apiservice
 import android.content.Context
 import app.alessandrotedesco.pixabay.BuildConfig
 import app.alessandrotedesco.pixabay.apiservice.interceptors.HeaderInterceptor
+import app.alessandrotedesco.pixabay.apiservice.interceptors.OfflineCacheInterceptor
 import app.alessandrotedesco.pixabay.apiservice.model.ImageResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -31,6 +32,7 @@ class RemoteDataSourceRetrofit(context: Context) : BaseRepo() {
         val oAuthClient = OkHttpClient.Builder()
             .addInterceptor(headerInterceptor)
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(OfflineCacheInterceptor(context))
             .writeTimeout(1, TimeUnit.MINUTES)
             .readTimeout(1, TimeUnit.MINUTES)
             .cache(cache)
