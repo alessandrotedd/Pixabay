@@ -12,4 +12,6 @@ object PreferencesKeys {
     val IMAGE_TAGS = stringPreferencesKey("IMAGE_TAGS")
     val IMAGE_USER = stringPreferencesKey("IMAGE_USER")
     val IMAGE_URL = stringPreferencesKey("IMAGE_URL")
+    val IMAGE_WIDTH = intPreferencesKey("IMAGE_WIDTH")
+    val IMAGE_HEIGHT = intPreferencesKey("IMAGE_HEIGHT")
 }

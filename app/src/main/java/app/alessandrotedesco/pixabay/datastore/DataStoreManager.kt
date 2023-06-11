@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import app.alessandrotedesco.pixabay.apiservice.model.Image
+import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_WIDTH
 import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_COMMENT
 import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_DOWNLOADS
+import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_HEIGHT
 import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_LIKES
 import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_TAGS
 import app.alessandrotedesco.pixabay.datastore.PreferencesKeys.IMAGE_URL
@@ -17,7 +19,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,6 +38,8 @@ class DataStoreManager @Inject constructor(@ApplicationContext context: Context)
             preferences[IMAGE_TAGS] = image.tags
             preferences[IMAGE_USER] = image.user
             preferences[IMAGE_URL] = image.largeImageURL
+            preferences[IMAGE_WIDTH] = image.imageWidth
+            preferences[IMAGE_HEIGHT] = image.imageHeight
         }
     }
 
@@ -47,7 +50,9 @@ class DataStoreManager @Inject constructor(@ApplicationContext context: Context)
             comments = preferences[IMAGE_COMMENT] ?: 0,
             tags = preferences[IMAGE_TAGS] ?: "",
             user = preferences[IMAGE_USER] ?: "",
-            largeImageURL = preferences[IMAGE_URL] ?: ""
+            largeImageURL = preferences[IMAGE_URL] ?: "",
+            imageWidth = preferences[IMAGE_WIDTH] ?: 1,
+            imageHeight = preferences[IMAGE_HEIGHT] ?: 1
         )
     }.stateIn(coroutineScope, SharingStarted.Lazily, Image())
 }
