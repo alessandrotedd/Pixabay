@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,13 +46,14 @@ fun MainSection(navController: NavHostController, viewModel: MainViewModel = hil
     val context = LocalContext.current
     val images = viewModel.images.observeAsState().value
     var onError by viewModel.onError
+    val errorString = stringResource(R.string.can_t_load_images)
 
     LaunchedEffect(Unit) {
         viewModel.searchImages(viewModel.query.value)
     }
     LaunchedEffect(onError) {
         if (onError) {
-            Toast.makeText(context, "Can't load images, check your internet connection and try again", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, errorString, Toast.LENGTH_LONG).show()
             onError = false
         }
     }
@@ -98,7 +100,7 @@ fun MainSectionUI(
                     modifier = Modifier.size(24.dp)
                 )
             }, placeholder = {
-                Text("Search images")
+                Text(stringResource(R.string.search_images))
             }
         ) {
             images?.let {
@@ -108,7 +110,7 @@ fun MainSectionUI(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Oops! No images found", Modifier.padding(16.dp))
+                        Text(stringResource(R.string.oops_no_images_found), Modifier.padding(16.dp))
                         androidx.compose.foundation.Image(
                             painter = painterResource(id = R.drawable.no_results),
                             modifier = Modifier.size(300.dp),
@@ -137,19 +139,19 @@ fun MainSectionUI(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { selectedImage = null },
-            title = { Text("See more details?") },
-            text = { Text("Do you want to see more details for this image?") },
+            title = { Text(stringResource(R.string.see_more_details)) },
+            text = { Text(stringResource(R.string.more_details_question)) },
             confirmButton = {
                 TextButton(onClick = {
                     navController.navigate(MainNav.Detail.route)
                     selectedImage = null
                 }) {
-                    Text("Yes")
+                    Text(stringResource(R.string.yes))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { selectedImage = null }) {
-                    Text("No")
+                    Text(stringResource(R.string.no))
                 }
             }
         )
