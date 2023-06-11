@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import app.alessandrotedesco.pixabay.apiservice.model.Image
 import app.alessandrotedesco.pixabay.ui.ImageCard
+import app.alessandrotedesco.pixabay.ui.navigation.MainNav
 import app.alessandrotedesco.pixabay.ui.theme.AppTheme
 import coil.ImageLoader
 import coil.disk.DiskCache
@@ -44,7 +45,8 @@ fun MainSection(navController: NavHostController, viewModel: MainViewModel = hil
         navController,
         images,
         viewModel.query,
-        viewModel::searchImages
+        viewModel::searchImages,
+        viewModel::cacheImage
     )
 }
 
@@ -54,10 +56,15 @@ fun MainSectionUI(
     navController: NavHostController,
     images: List<Image> = listOf(),
     query: MutableState<String> = mutableStateOf(""),
-    searchImages: (String) -> Unit = {}
+    searchImages: (String) -> Unit = {},
+    onImageSelected: (Image) -> Unit = {},
 ) {
     var selectedImage: Image? by remember { mutableStateOf(null) }
     val showDialog = selectedImage != null
+
+    LaunchedEffect(selectedImage) {
+        selectedImage?.let { image -> onImageSelected.invoke(image) }
+    }
 
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -104,9 +111,7 @@ fun MainSectionUI(
             text = { Text("Do you want to see more details for this image?") },
             confirmButton = {
                 TextButton(onClick = {
-                    selectedImage?.let {
-                        navController.navigate("detail/${it.id}")
-                    }
+                    navController.navigate(MainNav.Detail.route)
                     selectedImage = null
                 }) {
                     Text("Yes")

@@ -9,18 +9,18 @@ import app.alessandrotedesco.pixabay.apiservice.RemoteDataSourceRetrofit
 import app.alessandrotedesco.pixabay.apiservice.Resource
 import app.alessandrotedesco.pixabay.apiservice.model.Image
 import app.alessandrotedesco.pixabay.apiservice.model.ImageResponse
+import app.alessandrotedesco.pixabay.datastore.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val api: RemoteDataSourceRetrofit
+    private val api: RemoteDataSourceRetrofit,
+    private val dataStore: DataStoreManager
 ): ViewModel() {
     val images = MutableLiveData<ImageResponse?>()
     var query: MutableState<String> = mutableStateOf("fruits")
-    val showDialog: MutableState<Boolean> = mutableStateOf(false)
-    val selectedImage: MutableState<Image?> = mutableStateOf(null)
 
     fun searchImages(query: String) = viewModelScope.launch {
         val response = api.searchImages(query)
@@ -29,5 +29,9 @@ class MainViewModel @Inject constructor(
         } else {
             images.postValue(null)
         }
+    }
+
+    fun cacheImage(image: Image) = viewModelScope.launch {
+        dataStore.cacheImage(image)
     }
 }

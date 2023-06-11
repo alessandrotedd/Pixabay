@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
                         composable(MainNav.Search.route) {
                             MainSection(navController)
                         }
-                        composable(MainNav.Detail.route, MainNav.Detail.arguments) {
-                            DetailsSection(it.arguments?.getString("imageId")!!)
+                        composable(MainNav.Detail.route) {
+                            DetailsSection()
                         }
                     }
                 }

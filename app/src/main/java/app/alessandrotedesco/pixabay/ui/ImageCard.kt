@@ -33,7 +33,7 @@ import coil.request.ImageRequest
 fun ImageCard(image: Image, imageLoader: ImageLoader, onClick: () -> Unit = {}) {
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalContext.current)
-            .data(data = image.webformatURL)
+            .data(image.webformatURL)
             .crossfade(true)
             .networkCachePolicy(CachePolicy.READ_ONLY)
             .build(),
