@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,7 +37,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import app.alessandrotedesco.pixabay.apiservice.model.Image
 import app.alessandrotedesco.pixabay.ui.theme.AppTheme
-import coil.compose.AsyncImage
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
+import coil.request.ImageRequest
 
 @Composable
 fun MainSection(navController: NavHostController, viewModel: MainViewModel = hiltViewModel()) {
@@ -55,8 +60,23 @@ fun MainSectionUI(
     navController: NavHostController,
     images: List<Image> = listOf(),
     query: MutableState<String> = mutableStateOf(""),
-    searchImages: (String) -> Unit = {},
+    searchImages: (String) -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val imageLoader = ImageLoader.Builder(context)
+        .memoryCache {
+            MemoryCache.Builder(context)
+                .maxSizePercent(0.25)
+                .build()
+        }
+        .diskCache {
+            DiskCache.Builder()
+                .directory(context.cacheDir.resolve("image_cache"))
+                .maxSizePercent(0.02)
+                .build()
+        }
+        .build()
+
     Column {
         SearchBar(
             onSearch = { searchImages(it) },
@@ -72,7 +92,7 @@ fun MainSectionUI(
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 items(images.size) {
-                    ImageCard(images[it]) {
+                    ImageCard(images[it], imageLoader) {
                         Toast.makeText(
                             navController.context,
                             images[it].tags,
@@ -86,14 +106,22 @@ fun MainSectionUI(
 }
 
 @Composable
-fun ImageCard(image: Image, onClick: () -> Unit = {}) {
-    Card(Modifier.clickable { onClick }) {
+fun ImageCard(image: Image, imageLoader: ImageLoader, onClick: () -> Unit = {}) {
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current)
+            .data(data = image.webformatURL)
+            .crossfade(true)
+            .build(),
+        imageLoader = imageLoader
+    )
+
+    Card(Modifier.clickable { onClick.invoke() }) {
         Row(Modifier.fillMaxWidth()) {
-            AsyncImage(
-                model = image.webformatURL,
+            androidx.compose.foundation.Image(
+                painter = painter,
                 contentDescription = image.tags,
-                modifier = Modifier.size(128.dp),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(128.dp)
             )
             Column(verticalArrangement = Arrangement.SpaceAround) {
                 Text(
