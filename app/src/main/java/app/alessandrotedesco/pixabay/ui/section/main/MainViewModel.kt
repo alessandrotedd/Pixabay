@@ -1,5 +1,7 @@
 package app.alessandrotedesco.pixabay.ui.section.main
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +13,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val api: RemoteDataSourceRetrofit): ViewModel() {
+class MainViewModel @Inject constructor(
+    private val api: RemoteDataSourceRetrofit
+): ViewModel() {
     val images = MutableLiveData<ImageResponse?>()
+    var query: MutableState<String> = mutableStateOf("fruits")
 
     fun searchImages(query: String) = viewModelScope.launch {
         val response = api.searchImages(query)

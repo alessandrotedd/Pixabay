@@ -1,7 +1,6 @@
 package app.alessandrotedesco.pixabay.apiservice
 
 import app.alessandrotedesco.pixabay.BuildConfig
-import app.alessandrotedesco.pixabay.apiservice.adapter.MyEnumAdapter
 import app.alessandrotedesco.pixabay.apiservice.interceptors.HeaderInterceptor
 import app.alessandrotedesco.pixabay.apiservice.model.ImageResponse
 import com.squareup.moshi.Moshi
@@ -31,7 +30,6 @@ class RemoteDataSourceRetrofit: BaseRepo() {
 
         val moshiBuilder = MoshiConverterFactory.create(
             Moshi.Builder()
-                .add(MyEnumAdapter())
                 .add(KotlinJsonAdapterFactory())
                 .build()
         )
