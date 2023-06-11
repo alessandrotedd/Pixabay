@@ -15,7 +15,7 @@ import javax.inject.Singleton
 object HiltMainModule {
     @Singleton
     @Provides
-    fun provideWebService() = RemoteDataSourceRetrofit()
+    fun provideWebService(@ApplicationContext context: Context) = RemoteDataSourceRetrofit(context)
 
     @Provides
     @Singleton
