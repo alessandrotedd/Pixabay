@@ -2,11 +2,9 @@ package app.alessandrotedesco.pixabay.ui.section.main
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,9 +36,7 @@ import app.alessandrotedesco.pixabay.apiservice.model.Image
 import app.alessandrotedesco.pixabay.ui.ImageCard
 import app.alessandrotedesco.pixabay.ui.navigation.MainNav
 import app.alessandrotedesco.pixabay.ui.theme.AppTheme
-import coil.ImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
+import app.alessandrotedesco.pixabay.utils.getImageLoader
 
 @Composable
 fun MainSection(navController: NavHostController, viewModel: MainViewModel = hiltViewModel()) {
@@ -78,25 +74,12 @@ fun MainSectionUI(
 ) {
     var selectedImage: Image? by remember { mutableStateOf(null) }
     val showDialog = selectedImage != null
+    val context = LocalContext.current
+    val imageLoader = getImageLoader(context)
 
     LaunchedEffect(selectedImage) {
         selectedImage?.let { image -> onImageSelected.invoke(image) }
     }
-
-    val context = LocalContext.current
-    val imageLoader = ImageLoader.Builder(context)
-        .memoryCache {
-            MemoryCache.Builder(context)
-                .maxSizePercent(0.25)
-                .build()
-        }
-        .diskCache {
-            DiskCache.Builder()
-                .directory(context.cacheDir.resolve("image_cache"))
-                .maxSizePercent(0.02)
-                .build()
-        }
-        .build()
 
     Column {
         SearchBar(
