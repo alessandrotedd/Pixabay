@@ -19,15 +19,16 @@ class MainViewModel @Inject constructor(
     private val api: RemoteDataSourceRetrofit,
     private val dataStore: DataStoreManager
 ): ViewModel() {
-    val images = MutableLiveData<ImageResponse?>()
+    val images = MutableLiveData<List<Image>?>()
+    val onError = mutableStateOf(false)
     var query: MutableState<String> = mutableStateOf("fruits")
 
     fun searchImages(query: String) = viewModelScope.launch {
         val response = api.searchImages(query)
         if (response is Resource.Success) {
-            images.postValue(response.data)
+            images.postValue((response.data as ImageResponse).hits)
         } else {
-            images.postValue(null)
+            onError.value = true
         }
     }
 
