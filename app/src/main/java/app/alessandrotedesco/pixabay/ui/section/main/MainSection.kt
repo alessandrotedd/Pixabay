@@ -1,18 +1,23 @@
 package app.alessandrotedesco.pixabay.ui.section.main
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import app.alessandrotedesco.pixabay.apiservice.model.Image
 import app.alessandrotedesco.pixabay.ui.ImageCard
+import app.alessandrotedesco.pixabay.ui.navigation.MainNav
 import app.alessandrotedesco.pixabay.ui.theme.AppTheme
 import coil.ImageLoader
 import coil.disk.DiskCache
@@ -35,7 +41,13 @@ fun MainSection(navController: NavHostController, viewModel: MainViewModel = hil
 
     val images = viewModel.images.observeAsState().value?.hits ?: listOf()
 
-    MainSectionUI(navController, images, viewModel.query, viewModel::searchImages)
+    MainSectionUI(
+        navController,
+        images,
+        viewModel.query,
+        viewModel::searchImages,
+        viewModel::cacheImage
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,8 +56,16 @@ fun MainSectionUI(
     navController: NavHostController,
     images: List<Image> = listOf(),
     query: MutableState<String> = mutableStateOf(""),
-    searchImages: (String) -> Unit = {}
+    searchImages: (String) -> Unit = {},
+    onImageSelected: (Image) -> Unit = {},
 ) {
+    var selectedImage: Image? by remember { mutableStateOf(null) }
+    val showDialog = selectedImage != null
+
+    LaunchedEffect(selectedImage) {
+        selectedImage?.let { image -> onImageSelected.invoke(image) }
+    }
+
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
         .memoryCache {
@@ -77,15 +97,32 @@ fun MainSectionUI(
             ) {
                 items(images.size) {
                     ImageCard(images[it], imageLoader) {
-                        Toast.makeText(
-                            navController.context,
-                            images[it].tags,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        selectedImage = images[it]
                     }
                 }
             }
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { selectedImage = null },
+            title = { Text("See more details?") },
+            text = { Text("Do you want to see more details for this image?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    navController.navigate(MainNav.Detail.route)
+                    selectedImage = null
+                }) {
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { selectedImage = null }) {
+                    Text("No")
+                }
+            }
+        )
     }
 }
 
