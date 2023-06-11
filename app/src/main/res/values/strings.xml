@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Pixabay</string>
+    <string name="search_images">Search images</string>
+    <string name="oops_no_images_found">Oops! No images found</string>
+    <string name="see_more_details">See more details?</string>
+    <string name="more_details_question">Do you want to see more details for this image?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="can_t_load_images">Can\'t load images, check your internet connection and try again</string>
 </resources>
